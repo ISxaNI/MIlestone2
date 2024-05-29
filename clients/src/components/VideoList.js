@@ -5,8 +5,8 @@ function VideoList({ videos, selectVideo }) {
     <ul>
       {videos.map((video) => (
         <li key={video.id.videoId} onClick={() => selectVideo(video)}>
+                    <p>{video.snippet.title}</p>
           <img src={video.snippet.thumbnails.default.url} alt={video.snippet.title} />
-          <p>{video.snippet.title}</p>
         </li>
       ))}
     </ul>
