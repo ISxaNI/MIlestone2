@@ -31,4 +31,3 @@ function SearchBar({ setVideos }) {
 }
 
 export default SearchBar;
-
