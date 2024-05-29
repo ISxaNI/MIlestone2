@@ -5,26 +5,46 @@ function CommentBox({ videoId }) {
   const [comments, setComments] = useState([]);
   const [username, setUsername] = useState('');
   const [comment, setComment] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchComments = async () => {
-      const response = await axios.get(`/api/comments/${videoId}`);
-      setComments(response.data);
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await axios.get(`/api/comments/${videoId}`);
+        setComments(response.data);
+      } catch (err) {
+        setError('Failed to fetch comments');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchComments();
   }, [videoId]);
 
   const addComment = async (e) => {
     e.preventDefault();
-    const newComment = { username, comment, videoId };
-    const response = await axios.post('/api/comments', newComment);
-    setComments([...comments, response.data]);
-    setUsername('');
-    setComment('');
+    setIsLoading(true);
+    try {
+      const newComment = { username, comment, videoId };
+      const response = await axios.post('/api/comments', newComment);
+      setComments([...comments, response.data]);
+    } catch (err) {
+      setError('Failed to post comment');
+      console.error(err);
+    } finally {
+      setUsername('');
+      setComment('');
+    }
   };
 
   return (
     <div>
+      {error && <p className="error">{error}</p>}
+      {isLoading && <p>Loading...</p>}
       <form onSubmit={addComment}>
         <input
           type="text"
