@@ -5,7 +5,7 @@ const app = express()
 const commentsRouter = require('./routes/comments')
 
 require('dotenv').config()
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 app.use(express.json())
 app.use(cors())
 app.use('/api', commentsRouter)
