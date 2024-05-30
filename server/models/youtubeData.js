@@ -35,4 +35,4 @@ const fetchAndSaveVideos = async (query) => {
   }
 };
 
-module.exports = fetchAndSaveVideos;
+fetchAndSaveVideos()
