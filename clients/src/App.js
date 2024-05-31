@@ -9,8 +9,25 @@ function App() {
 
   return (
     <div className="App">
+      <h1>OurTube</h1>
       <SearchBar setVideos={setVideos} />
-      {selectedVideo && <CommentBox videoId={selectedVideo.id.videoId} />}
+      {selectedVideo ? (
+        <>
+          <div className="video-detail">
+            <iframe
+              title={selectedVideo.snippet.title}
+              src={`https://www.youtube.com/embed/${selectedVideo.id.videoId}`}
+              allowFullScreen
+              frameBorder="0"
+            ></iframe>
+            <h2>{selectedVideo.snippet.title}</h2>
+            <p>{selectedVideo.snippet.description}</p>
+          </div>
+          <CommentBox videoId={selectedVideo.id.videoId} />
+        </>
+      ) : (
+        <p>No video selected. Please search and select a video.</p>
+      )}
       <VideoList videos={videos} selectVideo={setSelectedVideo} />
     </div>
   );

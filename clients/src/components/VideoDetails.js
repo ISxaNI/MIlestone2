@@ -18,7 +18,7 @@ async function fetchVideoById(videoId) {
   }
 
 function VideoDetails({ video }) {
-  const { videoId } = useParams();
+  const { videoId } = useParams()
   const [currentVideo, setCurrentVideo] = useState(video);
 
   useEffect(() => {

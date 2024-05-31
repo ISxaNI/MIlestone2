@@ -28,16 +28,18 @@ function CommentBox({ videoId }) {
   const addComment = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
     try {
-      const newComment = { username, comment, videoId };
+      const newComment = { username, comment, videoId, likes: 0, dislikes: 0, timestamp: new Date() };
       const response = await axios.post('/api/comments', newComment);
       setComments([...comments, response.data]);
+      setUsername('');
+      setComment('');
     } catch (err) {
       setError('Failed to post comment');
       console.error(err);
     } finally {
-      setUsername('');
-      setComment('');
+      setIsLoading(false);
     }
   };
 
