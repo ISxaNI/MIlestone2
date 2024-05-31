@@ -3,36 +3,40 @@ const Video = require('./models/Video');
 require('dotenv').config();
 
 const fetchAndSaveVideos = async (query) => {
+  if (!query) {
+    console.error('No query provided for fetching videos');
+    return;
+  }
+
   try {
     const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
       params: {
         part: 'snippet',
         q: query,
         type: 'video',
-        key: process.env.REACT_APP_YOUTUBE_API_KEY,
+        key: process.env.REACT_APP_YOUTUBE_API_KEY, 
       },
     });
 
-    const videos = response.data.items;
+    const videos = response.data.items.map(video => ({
+      videoId: video.id.videoId,
+      title: video.snippet.title,
+      description: video.snippet.description,
+      publishedAt: video.snippet.publishedAt,
+      thumbnails: video.snippet.thumbnails,
+    }));
 
-    for (const video of videos) {
-      const videoData = {
-        videoId: video.id.videoId,
-        title: video.snippet.title,
-        description: video.snippet.description,
-        publishedAt: video.snippet.publishedAt,
-        thumbnails: video.snippet.thumbnails,
-      };
-
-      // Save video to MongoDB
+    // Save all videos concurrently
+    await Promise.all(videos.map(videoData => {
       const newVideo = new Video(videoData);
-      await newVideo.save();
-    }
+      return newVideo.save();
+    }));
 
     console.log('Videos saved successfully');
   } catch (error) {
     console.error('Error fetching or saving videos:', error.message);
+    throw error; 
   }
 };
 
-fetchAndSaveVideos()
+fetchAndSavevideos('commentsData');  // Example usage
